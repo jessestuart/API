@@ -26,6 +26,9 @@
     "covid"
   ],
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-node": "^11.0.0",
     "jest": "^25.1.0",
     "jest-junit": "^10.0.0"
   }
