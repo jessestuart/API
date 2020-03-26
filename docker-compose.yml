@@ -1,0 +1,15 @@
+version: "3.5"
+
+services:
+  covid-api:
+    build: .
+    image: jessestuart/covid-api
+    depends_on:
+      - covid-redis
+    ports:
+      - "3001:3000"
+
+  covid-redis:
+    image: redis:alpine
+    expose:
+      - "6379"

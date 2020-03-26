@@ -1,9 +1,12 @@
-FROM node:13
+FROM node:13-alpine
 
-RUN mkdir -p /home/container
+RUN apk add --no-cache tini
+
 WORKDIR /home/container
-
-COPY . /home/container
+COPY package.json package-lock.json /home/container/
 RUN npm i
 
-CMD [ "node", "server.js" ]
+COPY . /home/container
+
+ENTRYPOINT ["tini"]
+CMD ["node", "server.js"]
