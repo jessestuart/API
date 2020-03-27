@@ -1,78 +1,79 @@
 const axios = require('axios')
 const csv = require('csvtojson')
+
 const countryMap = require('./countryMap')
 
 var base =
   'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'
 
-var historical = async (keys, redis) => {
-  let casesResponse, deathsResponse, recResponse
-  try {
-    casesResponse = await axios.get(
-      `${base}time_series_covid19_confirmed_global.csv`
-    )
-    deathsResponse = await axios.get(
-      `${base}time_series_covid19_deaths_global.csv`
-    )
-    // recResponse = await axios.get(
-    //   `${base}time_series_covid19_recovered_global.csv`
-    // )
-  } catch (err) {
-    console.log(err)
-    return null
-  }
+// var historical = async (keys, redis) => {
+//   let casesResponse, deathsResponse, recResponse
+//   try {
+//     casesResponse = await axios.get(
+//       `${base}time_series_covid19_confirmed_global.csv`
+//     )
+//     deathsResponse = await axios.get(
+//       `${base}time_series_covid19_deaths_global.csv`
+//     )
+//     // recResponse = await axios.get(
+//     //   `${base}time_series_covid19_recovered_global.csv`
+//     // )
+//   } catch (err) {
+//     console.log(err)
+//     return null
+//   }
 
-  const parsedCases = await csv({
-    noheader: true,
-    output: 'csv'
-  }).fromString(casesResponse.data)
+//   const parsedCases = await csv({
+//     noheader: true,
+//     output: 'csv'
+//   }).fromString(casesResponse.data)
 
-  const parsedDeaths = await csv({
-    noheader: true,
-    output: 'csv'
-  }).fromString(deathsResponse.data)
+//   const parsedDeaths = await csv({
+//     noheader: true,
+//     output: 'csv'
+//   }).fromString(deathsResponse.data)
 
-  // const recParsed = await csv({
-  //   noheader: true,
-  //   output: 'csv'
-  // }).fromString(recResponse.data)
+//   // const recParsed = await csv({
+//   //   noheader: true,
+//   //   output: 'csv'
+//   // }).fromString(recResponse.data)
 
-  // to store parsed data
-  const result = []
-  const timelineKey = parsedCases[0].splice(4)
+//   // to store parsed data
+//   const result = []
+//   const timelineKey = parsedCases[0].splice(4)
 
-  for (let b = 0; b < parsedDeaths.length; ) {
-    const timeline = {
-      cases: {},
-      deaths: {}
-      // recovered: {}
-    }
-    const c = parsedCases[b].splice(4)
-    // const r = recParsed[b].splice(4)
-    const d = parsedDeaths[b].splice(4)
-    for (let i = 0; i < c.length; i++) {
-      timeline.cases[timelineKey[i]] = c[i]
-      timeline.deaths[timelineKey[i]] = d[i]
-      // timeline.recovered[timelineKey[i]] = r[i]
-    }
-    result.push({
-      country: countryMap.standardizeCountryName(
-        parsedCases[b][1].toLowerCase()
-      ),
-      province:
-        parsedCases[b][0] === ''
-          ? null
-          : countryMap.standardizeCountryName(parsedCases[b][0].toLowerCase()),
-      timeline
-    })
-    b++
-  }
+//   for (let b = 0; b < parsedDeaths.length; ) {
+//     const timeline = {
+//       cases: {},
+//       deaths: {}
+//       // recovered: {}
+//     }
+//     const c = parsedCases[b].splice(4)
+//     // const r = recParsed[b].splice(4)
+//     const d = parsedDeaths[b].splice(4)
+//     for (let i = 0; i < c.length; i++) {
+//       timeline.cases[timelineKey[i]] = c[i]
+//       timeline.deaths[timelineKey[i]] = d[i]
+//       // timeline.recovered[timelineKey[i]] = r[i]
+//     }
+//     result.push({
+//       country: countryMap.standardizeCountryName(
+//         parsedCases[b][1].toLowerCase()
+//       ),
+//       province:
+//         parsedCases[b][0] === ''
+//           ? null
+//           : countryMap.standardizeCountryName(parsedCases[b][0].toLowerCase()),
+//       timeline
+//     })
+//     b++
+//   }
 
-  const removeFirstObj = result.splice(1)
-  const string = JSON.stringify(removeFirstObj)
-  redis.set(keys.historical, string)
-  console.log(`Updated JHU CSSE Historical: ${removeFirstObj.length} locations`)
-}
+//   const removeFirstObj = result.splice(1)
+//   const string = JSON.stringify(removeFirstObj)
+//   redis.set(keys.historical, string)
+//   console.log(`Updated JHU CSSE Historical: ${removeFirstObj.length} locations`)
+// }
 
 var historical_v2 = async (keys, redis) => {
   let casesResponse, deathsResponse
@@ -104,7 +105,7 @@ var historical_v2 = async (keys, redis) => {
   const timelineKey = parsedCases[0].splice(4)
 
   // loop over all country entries
-  for (let b = 0; b < parsedDeaths.length; ) {
+  for (let b = 0; b < parsedDeaths.length;) {
     const timeline = {
       cases: {},
       deaths: {}
@@ -244,8 +245,6 @@ async function getHistoricalCountryData_v2(data, country) {
 }
 
 module.exports = {
-  historical,
   historical_v2,
-  getHistoricalCountryData,
   getHistoricalCountryData_v2
 }

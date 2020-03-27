@@ -4,13 +4,12 @@
 # Join our Server!
 [![Discord server](https://discordapp.com/api/guilds/689535536934813823/embed.png?style=banner4)](https://discord.gg/EvbMshU)
 
-# Partners with PrimedHosting
-Great and affordable prices! Starting at $0.75. Get started [here](https://primedhosting.com/NovelCovid)
-Join the [Discord server](https://primedhosting.com/discord)
-
 # API
 API for Current cases and more stuff about COVID-19 or the Novel Coronavirus Strain
 https://corona.lmao.ninja/
+
+# Recommended by Postman
+NovelCovid API is recommended by Postman [here](https://covid-19-apis.postman.com/)
 
 # Endpoints v2
 |  GET Request  | Output  |
@@ -26,6 +25,9 @@ https://corona.lmao.ninja/
 |  https://corona.lmao.ninja/countries | Returns data of all countries that has COVID-19 |
 |  https://corona.lmao.ninja/countries?sort={parameter} | Returns data of each country sorted by the parameter |
 |  https://corona.lmao.ninja/countries/{country-name} | Returns data of a specific country. If an exact name match is desired pass ?strict=true in the query string |
+|  https://corona.lmao.ninja/countries/{country-Id} | Returns the data of a country if it is equal to its country id  |
+|  https://corona.lmao.ninja/countries/{country-ISO2} | Returns the data of a country if it is equal to its country ISO2 |
+|  https://corona.lmao.ninja/countries/{country-ISO3} | Returns the data of a country if it is equal to its country ISO3 |
 |  https://corona.lmao.ninja/states | Returns all United States of America and their Corona data |
 |  https://corona.lmao.ninja/jhucsse | **DEPRECATED USE V2 ENDPOINT** Return data from the Johns Hopkins CSSE Data Repository (Provinces and such) |
 | https://corona.lmao.ninja/historical | **DEPRECATED USE V2 ENDPOINT** Get historical data from the start of 2020. (JHU CSSE GISand Data) |
@@ -40,8 +42,7 @@ const covid = require('novelcovid');
 ```
 
 ## Documentation
-
-To actually use the data, you will need an [async/await](https://javascript.info/async-await).
+Executing a method will return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). The examples here utilise [async/await](https://javascript.info/async-await) to access the data.
 
 ```js
 // Declare the package
@@ -99,7 +100,8 @@ You can read more about **new Date()** [here](https://developer.mozilla.org/en-U
 > https://discord.gg/EvbMshU
 
 ### Sources: 
-> https://www.worldometers.info/coronavirus/ 
+> https://www.worldometers.info/coronavirus/
+
 > https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series
 
 ## Contributors ✨
@@ -130,3 +132,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+## Partners with PrimedHosting
+Great and affordable prices! Starting at $0.75. Get started [here](https://primedhosting.com/NovelCovid)
+Join the [Discord server](https://primedhosting.com/discord)
+
