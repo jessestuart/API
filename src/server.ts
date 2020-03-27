@@ -6,6 +6,8 @@ import config from '../config.json'
 import scraper from '../scraper'
 import countryMap from '../funcs/countryMap'
 import country_utils from '../utils/country_utils'
+import redis from '../utils/redis'
+
 // const Redis = require('ioredis')
 
 // var express = require('express')
@@ -28,23 +30,11 @@ app.use(cors())
 //   port: config.redis.port
 // })
 
-class Redis {
-  _db = {}
-
-  get(key: string) {
-    return this._db[key]
-  }
-
-  set(key: string, value: any) {
-    this._db[key] = value
-  }
-}
-const redis = new Redis()
-
 const keys = config.keys
 
-const execAll = () => {
-  return Promise.all([
+const execAll = async () => {
+  console.log('exec all')
+  return await Promise.all([
     scraper.getCountries(keys, redis),
     scraper.getAll(keys, redis),
     scraper.getStates(keys, redis),
@@ -61,8 +51,8 @@ const execAll = () => {
   // scraper.historical.historical(keys, redis)
   // scraper.historical.historical_v2(keys, redis)
 }
-execAll()
-setInterval(execAll, config.interval)
+// execAll()
+setInterval(async () => await execAll(), config.interval)
 
 app.get('/', async function(request, response) {
   response.redirect('https://github.com/novelcovid/api')
@@ -72,10 +62,10 @@ const listener = app.listen(config.port, function() {
   console.log('Your app is listening on port ' + listener.address().port)
 })
 
-app.get('/all/', async function(req, res) {
-  let all = JSON.parse(await redis.get(keys.all))
-  res.send(all)
-})
+// app.get('/all/', async function(req, res) {
+//   let all = JSON.parse(await redis.get(keys.all))
+//   res.send(all)
+// })
 
 app.get('/countries/', async function(req, res) {
   let sort = req.query.sort

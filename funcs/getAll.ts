@@ -28,8 +28,9 @@ const getAll = async (keys, redis) => {
     }
   })
   result.updated = Date.now()
-  const string = JSON.stringify(result)
-  redis.set(keys.all, string)
+  // const string = JSON.stringify(result)
+  redis.set(keys.all, result)
+  // redis.set(keys.all, string)
   console.log('Updated The Cases', result)
   return result
 }
