@@ -1,14 +1,25 @@
-var express = require('express')
-var app = express()
-var axios = require('axios')
-var cheerio = require('cheerio')
-var cors = require('cors')
-const config = require('./config.json')
+import express from 'express'
+import axios from 'axios'
+import cheerio from 'cheerio'
+import cors from 'cors'
+import config from '../config.json'
+import scraper from '../scraper'
+import countryMap from '../funcs/countryMap'
+import country_utils from '../utils/country_utils'
 // const Redis = require('ioredis')
-const scraper = require('./scraper')
-const countryMap = require('./funcs/countryMap')
-const country_utils = require('./utils/country_utils')
 
+// var express = require('express')
+// var app = express()
+// var axios = require('axios')
+// var cheerio = require('cheerio')
+// var cors = require('cors')
+// const config = require('./config.json')
+// // const Redis = require('ioredis')
+// const scraper = require('./scraper')
+// const countryMap = require('./funcs/countryMap')
+// const country_utils = require('./utils/country_utils')
+
+const app = express()
 app.use(cors())
 
 // create redis instance :O
@@ -20,15 +31,15 @@ app.use(cors())
 class Redis {
   _db = {}
 
-  get(key) {
+  get(key: string) {
     return this._db[key]
   }
 
-  set(key, value) {
+  set(key: string, value: any) {
     this._db[key] = value
   }
 }
-redis = new Redis()
+const redis = new Redis()
 
 const keys = config.keys
 
@@ -40,7 +51,7 @@ const execAll = () => {
     scraper.jhuLocations.jhudata(keys, redis),
     scraper.jhuLocations.jhudata_v2(keys, redis),
     scraper.historical.historical(keys, redis),
-    scraper.historical.historical_v2(keys, redis)
+    scraper.historical.historical_v2(keys, redis),
   ])
   // scraper.getCountries(keys, redis)
   // scraper.getAll(keys, redis)
@@ -96,7 +107,7 @@ app.get('/historical/:country', async function(req, res) {
     data,
     req.params.country.toLowerCase(),
     redis,
-    keys.states
+    keys.states,
   )
   res.send(countryData)
 })
@@ -105,7 +116,7 @@ app.get('/countries/:country', async function(req, res) {
   let countries = JSON.parse(await redis.get(keys.countries))
 
   const standardizedCountryName = countryMap.standardizeCountryName(
-    req.params.country.toLowerCase()
+    req.params.country.toLowerCase(),
   )
   let country = countries.find(e => {
     // see if strict was even a parameter
@@ -136,7 +147,7 @@ app.get('/v2/historical/:country', async function(req, res) {
   let data = JSON.parse(await redis.get(keys.historical_v2))
   const countryData = await scraper.historical.getHistoricalCountryData_v2(
     data,
-    req.params.country.toLowerCase()
+    req.params.country.toLowerCase(),
   )
   res.send(countryData)
 })
@@ -148,7 +159,7 @@ app.get('/v2/jhucsse/', async function(req, res) {
 
 app.get('/invite/', async function(req, res) {
   res.redirect(
-    'https://discordapp.com/oauth2/authorize?client_id=685268214435020809&scope=bot&permissions=537250880'
+    'https://discordapp.com/oauth2/authorize?client_id=685268214435020809&scope=bot&permissions=537250880',
   )
 })
 
