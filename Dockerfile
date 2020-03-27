@@ -9,4 +9,4 @@ RUN npm i
 COPY . /home/container
 
 ENTRYPOINT ["tini"]
-CMD ["node", "server.js"]
+CMD ["yarn", "start"]
