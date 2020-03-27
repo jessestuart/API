@@ -4,6 +4,5 @@ json.sqlite
 config.json
 package-lock.json
 dump.rdb
-yarn.lock
 
 .now
